@@ -124,8 +124,8 @@ app.post('/api/kyc', (req, res) => {
     });
 });
 
-const PORT = 3001;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`\n🚀 SERVEUR GOSEND ACTIF !`);
     console.log(`🔌 Connecteurs Orange/MTN prêts. Attente des clés cryptographiques.`);
 });
