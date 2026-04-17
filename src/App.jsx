@@ -38,9 +38,9 @@ function App() {
         </Routes>
       </div>
       
-      <div className="floating-support" title="Support Client 24/7">
-        <button><MessageCircle size={24} /></button>
-      </div>
+      <a href="https://wa.me/2250788661503" target="_blank" rel="noopener noreferrer" className="floating-support" title="Support Client 24/7">
+        <button style={{cursor: 'pointer'}}><MessageCircle size={24} /></button>
+      </a>
     </>
   );
 }

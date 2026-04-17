@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const [amount, setAmount] = useState('');
@@ -9,6 +10,7 @@ export default function Home() {
   const [error, setError] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const networks = [
     { id: 'orange', name: 'Orange', colorClass: 'orange', dotClass: 'dot-orange' },
@@ -69,11 +71,8 @@ export default function Home() {
       // Succès Confirmé par la Base de Données !
       setSuccess(true);
       setTimeout(() => {
-        setSuccess(false);
-        setAmount('');
-        setPhone('');
-        setConfirmPhone('');
-      }, 4000);
+        navigate('/profile');
+      }, 2000);
       
     } catch (err) {
       setError(err.message);

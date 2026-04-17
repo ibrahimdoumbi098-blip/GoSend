@@ -74,7 +74,7 @@ export default function UserProfile() {
             <div style={{width: '0%', height: '100%', background: 'linear-gradient(90deg, var(--orange), var(--error))', borderRadius: '10px', transition: 'width 1s ease-in-out'}}></div>
          </div>
          
-         {userData?.daily_limit <= 50000 && (
+         {userData?.daily_limit <= 100000 && (
            <div style={{marginTop: '30px', padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', borderLeft: '4px solid var(--primary)'}}>
               <p style={{margin: '0 0 15px 0', color: 'var(--text-muted)'}}>Pour augmenter votre limite d'envoi à <strong>2 000 000 F par jour</strong>, vous devez prouver votre identité.</p>
               <Link to="/kyc" className="secondary-btn" style={{display: 'inline-block', textDecoration:'none', textAlign:'center'}}>Lancer la vérification KYC</Link>

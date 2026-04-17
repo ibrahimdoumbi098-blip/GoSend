@@ -48,7 +48,7 @@ export default function KycUpload() {
               <ShieldAlert size={24} color="var(--orange)" />
               <div>
                 <strong>Niveau actuel : Niveau 1</strong><br/>
-                <span style={{fontSize: '0.85rem'}}>Plafond bloqué à 50 000 FCFA / jour</span>
+                <span style={{fontSize: '0.85rem'}}>Plafond bloqué à 100 000 FCFA / jour</span>
               </div>
             </div>
 

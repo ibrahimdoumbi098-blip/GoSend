@@ -16,7 +16,7 @@ export function initDB() {
             id TEXT PRIMARY KEY,
             phone_number TEXT UNIQUE,
             kyc_status TEXT DEFAULT 'level_1',
-            daily_limit INTEGER DEFAULT 50000
+            daily_limit INTEGER DEFAULT 100000
         )`);
 
         // Table des Transactions
@@ -44,7 +44,7 @@ export function initDB() {
 
         // Injection d'un utilisateur de test (Le compte principal)
         db.run(`INSERT OR IGNORE INTO users (id, phone_number, kyc_status, daily_limit) 
-            VALUES ('GOS-943029', '0707070707', 'level_1', 50000)`);
+            VALUES ('GOS-943029', '0707070707', 'level_1', 100000)`);
             
         console.log("💿 Base de données SQLite GoSend prête, sécurisée et structurée.");
     });
