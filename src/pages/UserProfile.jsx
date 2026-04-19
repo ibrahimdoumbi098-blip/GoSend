@@ -9,7 +9,7 @@ export default function UserProfile() {
 
   // 🔗 Connexion avec notre VRAI Serveur Backend
   useEffect(() => {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+    const API_URL = import.meta.env.VITE_API_URL || '';
     
     // Fetch User Data and Transactions in parallel
     Promise.all([

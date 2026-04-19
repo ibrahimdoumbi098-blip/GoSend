@@ -48,7 +48,7 @@ export default function Home() {
     
     try {
       // 🔗 Connexion Dynamique : Bascule du mode Local (Développement) au mode en Ligne (Serveur Vercel/Railway Production)
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const API_URL = import.meta.env.VITE_API_URL || '';
       
       const response = await fetch(`${API_URL}/api/transfer`, {
         method: 'POST',
