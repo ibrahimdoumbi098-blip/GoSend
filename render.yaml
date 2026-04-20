@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: gosend-backend
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+    disk:
+      name: gosend-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1

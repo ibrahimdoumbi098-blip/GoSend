@@ -15,6 +15,11 @@ initDB();
 const orangeAPI = new OrangeAPI();
 const mtnAPI = new MtnMoMoAPI();
 
+// 0. Health Check (Render vérifie que le serveur est en vie)
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', message: '🚀 GoSend Backend opérationnel' });
+});
+
 // 1. Obtenir les infos utilisateur
 app.get('/api/users/:id', (req, res) => {
     const { id } = req.params;
@@ -124,12 +129,8 @@ app.post('/api/kyc', (req, res) => {
     });
 });
 
-if (!process.env.VERCEL) {
-    const PORT = process.env.PORT || 3001;
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`\n🚀 SERVEUR GOSEND ACTIF !`);
-        console.log(`🔌 Connecteurs Orange/MTN prêts.`);
-    });
-}
-
-export default app;
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`\n🚀 SERVEUR GOSEND ACTIF sur le port ${PORT} !`);
+    console.log(`🔌 Connecteurs Orange/MTN prêts.`);
+});

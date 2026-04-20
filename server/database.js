@@ -5,20 +5,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Le fichier de la base de données
-let dbPath = path.resolve(__dirname, 'gosend.sqlite');
-
-// Vercel Serverless Fix: le système est en lecture seule, on doit mémoriser SQLite dans /tmp
-if (process.env.VERCEL) {
-    const tmpPath = '/tmp/gosend.sqlite';
-    import('fs').then(fs => {
-        if (!fs.existsSync(tmpPath) && fs.existsSync(dbPath)) {
-            fs.copyFileSync(dbPath, tmpPath);
-        }
-    });
-    dbPath = '/tmp/gosend.sqlite';
-}
-
+// Le fichier de la base de données (se créera automatiquement s'il n'existe pas)
+const dbPath = path.resolve(__dirname, 'gosend.sqlite');
 const db = new sqlite3.Database(dbPath);
 
 export function initDB() {
