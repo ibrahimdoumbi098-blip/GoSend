@@ -1,13 +1,45 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>gosend</title>
-  </head>
-  <body>
-    <div id="root"></div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoSend — Transfert Inter-Réseaux | Côte d'Ivoire</title>
+    <meta name="description" content="Transférez instantanément entre Orange Money, MTN MoMo, Wave et Moov en Côte d'Ivoire. Rapide, sécurisé, transparent.">
+    <meta name="theme-color" content="#6366F1">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💸</text></svg>">
+    <style>
+        body {
+            background-color: #F8FAFC;
+            color: #0F172A;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        #loading-fallback {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #E2E8F0;
+            border-top-color: #6366F1;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <div id="loading-fallback">
+            <div class="spinner"></div>
+            <p style="margin-top: 16px; font-weight: 700; letter-spacing: 0.1em; font-size: 13px; color: #94A3B8;">GOSEND</p>
+        </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
-  </body>
+</body>
 </html>

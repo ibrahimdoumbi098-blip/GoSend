@@ -1,114 +1,150 @@
 import React, { useEffect, useState } from 'react';
-import { User, Activity, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import * as Lucide from 'lucide-react';
+
+const Icon = ({ name, size = 18, className = "", style = {} }) => {
+  const LucideIcon = Lucide[name];
+  if (!LucideIcon) return null;
+  return <LucideIcon size={size} className={className} style={style} />;
+};
 
 export default function UserProfile() {
   const [userData, setUserData] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔗 Connexion avec notre VRAI Serveur Backend
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_URL || '';
-    
-    // Fetch User Data and Transactions in parallel
     Promise.all([
       fetch(`${API_URL}/api/users/GOS-943029`).then(res => res.json()),
       fetch(`${API_URL}/api/transactions`).then(res => res.json())
-    ])
-    .then(([userDataRes, txDataRes]) => {
-      setUserData(userDataRes);
-      setTransactions(txDataRes);
+    ]).then(([u, t]) => {
+      setUserData(u);
+      setTransactions(Array.isArray(t) ? t : []);
       setLoading(false);
-    })
-    .catch(err => {
-      console.error(err);
-      setLoading(false);
-    });
+    }).catch(() => setLoading(false));
   }, []);
 
-  if (loading) return <div style={{color:'white', padding: '50px', textAlign: 'center'}}><div className="spinner"></div> Connexion au serveur bancaire...</div>;
+  if (loading) return (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ textAlign: 'center' }}>
+        <div className="spinner" style={{ margin: '0 auto 12px' }} />
+        <p style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)' }}>Chargement...</p>
+      </div>
+    </div>
+  );
 
-  const getStatusIcon = (status) => {
-    switch(status) {
-      case 'success': return <CheckCircle size={18} color="var(--success)" />;
-      case 'pending':
-      case 'pending_gateway': return <Clock size={18} color="var(--orange)" />;
-      default: return <XCircle size={18} color="var(--error)" />;
-    }
-  };
-
-  const getStatusText = (status) => {
-    switch(status) {
-      case 'success': return 'Confirmé';
-      case 'pending':
-      case 'pending_gateway': return 'En attente';
-      default: return 'Échoué';
-    }
-  };
+  const successTx = transactions.filter(tx => tx.status === 'completed' || tx.status === 'success');
+  const totalSpent = successTx.reduce((acc, tx) => acc + (tx.amount || 0), 0);
+  const limitPct = Math.min(100, (totalSpent / (userData?.daily_limit || 100000)) * 100);
 
   return (
-    <div className="container" style={{maxWidth: '800px'}}>
-      <div className="header" style={{textAlign: 'left', display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px'}}>
-         <div style={{width: '80px', height: '80px', background: 'var(--primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-           <User size={40} color="white" />
-         </div>
-         <div>
-           <h2 style={{color: 'white', fontSize:'2rem', margin: '0 0 5px'}}>ID: {userData?.id}</h2>
-           <p style={{margin: '0 0 10px 0', color: 'var(--text-muted)'}}>Numéro : {userData?.phone_number}</p>
-           {userData?.kyc_status === 'level_1' ? (
-             <span style={{background: 'rgba(239, 68, 68, 0.1)', color: 'var(--error)', padding: '5px 10px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold'}}>Niveau 1 (Non Vérifié KYC)</span>
-           ) : (
-             <span style={{background: 'rgba(16, 185, 129, 0.1)', color: 'var(--success)', padding: '5px 10px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold'}}>Niveau 2 (Vérifié)</span>
-           )}
-         </div>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px 16px 40px' }}>
+      {/* Profile Card */}
+      <div className="transfer-card animate-fade-up" style={{ padding: '32px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+          <div style={{
+            width: '64px', height: '64px', borderRadius: '20px',
+            background: 'linear-gradient(135deg, #6366F1, #8B5CF6)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 8px 24px rgba(99,102,241,0.2)',
+          }}>
+            <Icon name="User" size={32} style={{ color: 'white' }} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <h1 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>ID: {userData?.id}</h1>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+              <span style={{ padding: '4px 12px', background: 'var(--bg-secondary)', borderRadius: '8px', fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)' }}>{userData?.phone_number}</span>
+              <span style={{
+                padding: '4px 12px', borderRadius: '8px', fontSize: '11px', fontWeight: 700,
+                background: userData?.kyc_status === 'level_2' ? '#ECFDF5' : '#FFFBEB',
+                color: userData?.kyc_status === 'level_2' ? '#10B981' : '#F59E0B',
+              }}>
+                {userData?.kyc_status === 'level_2' ? '✓ Vérifié' : 'Niveau 1'}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="card" style={{padding: '40px', marginBottom: '20px'}}>
-         <h3 style={{marginTop: '0', display: 'flex', alignItems: 'center', gap: '10px'}}><Activity size={20} color="var(--primary)"/> Suivi du Plafond Journalier (Données Réelles)</h3>
-         <div style={{display: 'flex', justifyContent: 'space-between', margin: '20px 0 10px 0', color: 'var(--text-muted)', fontWeight: 'bold'}}>
-            <span>Consommé : 0 F</span>
-            <span style={{color: 'white'}}>Total Autorisé : {userData?.daily_limit?.toLocaleString('fr-FR')} F</span>
-         </div>
-         <div style={{width: '100%', height: '14px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden'}}>
-            <div style={{width: '0%', height: '100%', background: 'linear-gradient(90deg, var(--orange), var(--error))', borderRadius: '10px', transition: 'width 1s ease-in-out'}}></div>
-         </div>
-         
-         {userData?.daily_limit <= 100000 && (
-           <div style={{marginTop: '30px', padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', borderLeft: '4px solid var(--primary)'}}>
-              <p style={{margin: '0 0 15px 0', color: 'var(--text-muted)'}}>Pour augmenter votre limite d'envoi à <strong>2 000 000 F par jour</strong>, vous devez prouver votre identité.</p>
-              <Link to="/kyc" className="secondary-btn" style={{display: 'inline-block', textDecoration:'none', textAlign:'center'}}>Lancer la vérification KYC</Link>
-           </div>
-         )}
+      {/* Limits */}
+      <div className="transfer-card animate-fade-up-1" style={{ marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <div>
+            <p style={{ fontSize: '11px', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '4px' }}>Utilisation du plafond</p>
+            <p style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              {totalSpent.toLocaleString()} <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>/ {userData?.daily_limit?.toLocaleString()} FCFA</span>
+            </p>
+          </div>
+          <span style={{ fontSize: '1.1rem', fontWeight: 900, color: limitPct > 80 ? '#EF4444' : 'var(--accent-primary)' }}>{limitPct.toFixed(0)}%</span>
+        </div>
+        <div style={{ width: '100%', height: '6px', background: 'var(--bg-tertiary)', borderRadius: '100px', overflow: 'hidden' }}>
+          <div style={{
+            height: '100%', borderRadius: '100px', transition: 'width 1s ease-out',
+            width: `${limitPct}%`,
+            background: limitPct > 80 ? '#EF4444' : 'linear-gradient(90deg, #6366F1, #8B5CF6)',
+          }} />
+        </div>
+        {userData?.kyc_status !== 'level_2' && (
+          <Link to="/kyc" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '14px 16px', marginTop: '16px', borderRadius: 'var(--radius-sm)',
+            background: 'var(--accent-primary-light)', textDecoration: 'none', transition: 'all 0.2s',
+          }}>
+            <div>
+              <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--accent-primary)' }}>Augmenter mes plafonds</p>
+              <p style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Passer à 2,000,000 FCFA/jour</p>
+            </div>
+            <Icon name="ArrowRight" size={16} style={{ color: 'var(--accent-primary)' }} />
+          </Link>
+        )}
       </div>
 
-      <div className="card" style={{padding: '40px'}}>
-        <h3 style={{marginTop: '0', display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px'}}><Clock size={20} color="var(--primary)"/> Historique des Transactions</h3>
-        
+      {/* Transactions */}
+      <div className="transfer-card animate-fade-up-2" style={{ padding: 0, overflow: 'hidden' }}>
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-light)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Transactions récentes</span>
+          <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)' }}>{transactions.length} total</span>
+        </div>
         {transactions.length === 0 ? (
-          <p style={{color: 'var(--text-muted)', textAlign: 'center'}}>Aucune transaction récente.</p>
+          <div style={{ padding: '48px 24px', textAlign: 'center' }}>
+            <Icon name="Inbox" size={32} style={{ color: 'var(--border-light)', marginBottom: '12px' }} />
+            <p style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>Aucune transaction</p>
+          </div>
         ) : (
-          <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
-            {transactions.map(tx => (
-              <div key={tx.id} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px'}}>
-                <div style={{display: 'flex', gap: '15px', alignItems: 'center'}}>
-                   <div style={{width: '40px', height: '40px', borderRadius: '50%', background: `var(--${tx.to_network || 'primary'})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '0.8rem', color: 'white'}}>
-                     {tx.to_network?.substring(0, 2)}
-                   </div>
-                   <div>
-                     <h4 style={{margin: '0 0 5px', color: 'white'}}>{tx.amount?.toLocaleString('fr-FR')} FCFA</h4>
-                     <p style={{margin: '0', fontSize: '0.85rem', color: 'var(--text-muted)'}}>
-                       Depuis {tx.from_network} • {new Date(tx.created_at).toLocaleDateString('fr-FR')}
-                     </p>
-                   </div>
+          transactions.map(tx => (
+            <div key={tx.id} style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)',
+              transition: 'background 0.2s',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                  width: '36px', height: '36px', borderRadius: '10px',
+                  background: tx.to_network === 'ORANGE' ? '#FFF7ED' : tx.to_network === 'MTN' ? '#FFFBEB' : tx.to_network === 'WAVE' ? '#F0FDFF' : '#EFF6FF',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <Icon name="ArrowUpRight" size={16} style={{
+                    color: tx.to_network === 'ORANGE' ? '#FF7900' : tx.to_network === 'MTN' ? '#CA8A04' : tx.to_network === 'WAVE' ? '#0891B2' : '#2563EB',
+                  }} />
                 </div>
-                <div style={{display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem', color: 'var(--text-muted)'}}>
-                   {getStatusText(tx.status)}
-                   {getStatusIcon(tx.status)}
+                <div>
+                  <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Envoi {tx.to_network}</p>
+                  <p style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{new Date(tx.created_at).toLocaleString('fr-FR')}</p>
                 </div>
               </div>
-            ))}
-          </div>
+              <div style={{ textAlign: 'right' }}>
+                <p style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)' }}>-{tx.amount?.toLocaleString()} F</p>
+                <span style={{
+                  fontSize: '9px', fontWeight: 700, padding: '2px 8px', borderRadius: '6px',
+                  background: (tx.status === 'completed' || tx.status === 'success') ? '#ECFDF5' : '#FEF2F2',
+                  color: (tx.status === 'completed' || tx.status === 'success') ? '#10B981' : '#EF4444',
+                }}>
+                  {(tx.status === 'completed' || tx.status === 'success') ? 'Réussi' : 'Échoué'}
+                </span>
+              </div>
+            </div>
+          ))
         )}
       </div>
     </div>

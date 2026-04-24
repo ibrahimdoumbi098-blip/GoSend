@@ -1,163 +1,213 @@
 import express from 'express';
 import cors from 'cors';
-import { sql } from '@vercel/postgres';
+import crypto from 'crypto';
+import db from '../server/core_db.js';
+import { OrangeAPI } from '../server/gateways/orange.js';
+import { MtnMoMoAPI } from '../server/gateways/mtn.js';
+import { MoovAPI } from '../server/gateways/moov.js';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+const ALGORITHM = 'aes-256-gcm';
+const ENCRYPTION_KEY = Buffer.from(process.env.ENCRYPTION_KEY || '0'.repeat(64), 'hex');
+
+// Gateways
+const orangeAPI = new OrangeAPI();
+const mtnAPI = new MtnMoMoAPI();
+const moovAPI = new MoovAPI();
+
 // =============================================
-// INITIALISATION DE LA BASE DE DONNÉES (POSTGRES)
-// Cette fonction s'assure que les tables existent
+// SÉCURITÉ : CHIFFREMENT DES DONNÉES
 // =============================================
-async function initDB() {
-    try {
-        // Table des Utilisateurs
-        await sql`
-            CREATE TABLE IF NOT EXISTS users (
-                id TEXT PRIMARY KEY,
-                phone_number TEXT UNIQUE,
-                kyc_status TEXT DEFAULT 'level_1',
-                daily_limit INTEGER DEFAULT 100000
-            );
-        `;
-
-        // Table des Transactions
-        await sql`
-            CREATE TABLE IF NOT EXISTS transactions (
-                id SERIAL PRIMARY KEY,
-                user_id TEXT,
-                amount INTEGER,
-                fee INTEGER,
-                from_network TEXT,
-                to_network TEXT,
-                status TEXT DEFAULT 'pending',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        `;
-
-        // Table KYC
-        await sql`
-            CREATE TABLE IF NOT EXISTS kyc_documents (
-                id SERIAL PRIMARY KEY,
-                user_id TEXT,
-                document_type TEXT,
-                status TEXT DEFAULT 'pending',
-                upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        `;
-
-        // Injection de l'utilisateur de test si absent
-        await sql`
-            INSERT INTO users (id, phone_number, kyc_status, daily_limit)
-            VALUES ('GOS-943029', '0707070707', 'level_1', 100000)
-            ON CONFLICT (id) DO NOTHING;
-        `;
-        
-        console.log("💿 Base de données Postgres GoSend prête.");
-    } catch (error) {
-        console.error("❌ Erreur Initialisation Postgres:", error);
-    }
+function encrypt(text) {
+    if (!text) return text;
+    const iv = crypto.randomBytes(12);
+    const cipher = crypto.createCipheriv(ALGORITHM, ENCRYPTION_KEY, iv);
+    let encrypted = cipher.update(text, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    const authTag = cipher.getAuthTag().toString('hex');
+    return `${iv.toString('hex')}:${authTag}:${encrypted}`;
 }
 
 // =============================================
-// ROUTES API (MIGRÉES VERS POSTGRES)
+// DÉTECTION OPÉRATEUR (SMART ROUTING)
+// =============================================
+function detectOperator(phone) {
+    const p = phone.replace(/\s/g, '');
+    // Format CI : 10 chiffres. 
+    // Orange: 07, 08, 09
+    // MTN: 05, 04, 06
+    // Moov: 01
+    if (p.length < 2) return 'WAVE';
+    const prefix = p.substring(0, 2);
+    
+    if (['07', '08', '09'].includes(prefix)) return 'ORANGE';
+    if (['05', '04', '06'].includes(prefix)) return 'MTN';
+    if (['01'].includes(prefix)) return 'MOOV';
+    
+    return 'WAVE';
+}
+
+// =============================================
+// ROUTES API GOSEND
 // =============================================
 
-// 0. Health Check
-app.get('/api/health', async (req, res) => {
-    await initDB();
-    res.json({ status: 'ok', message: '🚀 GoSend Backend (Postgres) opérationnel' });
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', engine: '🚀 GoSend Core v2.2 (Integrated Gateways)' });
 });
 
-// 1. Obtenir les infos utilisateur
+app.get('/api/init', async (req, res) => {
+    try {
+        await db.initCoreTables();
+        res.json({ success: true, message: "Base de données initialisée." });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 app.get('/api/users/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const { rows } = await sql`SELECT * FROM users WHERE id = ${id}`;
-        
-        if (rows.length > 0) {
-            res.json(rows[0]);
-        } else {
-            res.status(404).json({ error: "Utilisateur non trouvé" });
-        }
+        const { rows } = await db.query`SELECT * FROM users WHERE id = ${req.params.id}`;
+        if (rows.length === 0) return res.status(404).json({ error: "Utilisateur non trouvé" });
+        res.json(rows[0]);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Erreur serveur BDD Postgres" });
-    }
-});
-
-// 2. MOTEUR DE PAIEMENT
-app.post('/api/transfer', async (req, res) => {
-    try {
-        const { user_id, amount, from_network, to_network } = req.body;
-        
-        if (!amount || amount < 500) {
-            return res.status(400).json({ error: "Montant invalide. Minimum 500 FCFA." });
-        }
-        
-        const fee = amount * 0.015;
-        
-        // Vérifier le plafond
-        const { rows: userRows } = await sql`SELECT daily_limit FROM users WHERE id = ${user_id}`;
-        if (userRows.length === 0) {
-            return res.status(400).json({ error: "Identifiant utilisateur introuvable." });
-        }
-        
-        const user = userRows[0];
-        if (amount > user.daily_limit) {
-            return res.status(403).json({ error: `Alerte Sécurité: Ce transfert dépasse votre plafond autorisé de ${user.daily_limit} FCFA.` });
-        }
-        
-        // Enregistrer la transaction
-        const { rows: txRows } = await sql`
-            INSERT INTO transactions (user_id, amount, fee, from_network, to_network, status)
-            VALUES (${user_id}, ${amount}, ${fee}, ${from_network}, ${to_network}, 'pending_gateway')
-            RETURNING id;
-        `;
-        
-        res.status(201).json({
-            message: "L'opérateur télécom va vous demander de valider le code sur votre téléphone.",
-            transaction_id: txRows[0].id,
-            gateway_url: null
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Erreur de connexion avec l'opérateur financier." });
-    }
-});
-
-// 3. Webhooks Orange
-app.post('/api/webhooks/orange', (req, res) => {
-    const { status, txnid } = req.body;
-    console.log(`🚨 [WEBHOOK ORANGE] Transaction ${txnid}: ${status}`);
-    res.status(200).send("OK");
-});
-
-// 4. Historique des transactions
-app.get('/api/transactions', async (req, res) => {
-    try {
-        const { rows } = await sql`SELECT * FROM transactions ORDER BY created_at DESC LIMIT 50`;
-        res.json(rows);
-    } catch (err) {
-        console.error(err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// 5. KYC - Vérification d'Identité
-app.post('/api/kyc', async (req, res) => {
+app.post('/api/transfer', async (req, res) => {
+    const startTime = Date.now();
+    const { user_id, amount, phone, idempotency_key, from_network } = req.body;
+    const to_operator = detectOperator(phone);
+
     try {
-        const { user_id } = req.body;
+        if (!amount || amount < 500) throw new Error("Montant minimum 500 FCFA");
+
+        // 1. Vérification Plafond
+        const { rows: userRows } = await db.query`SELECT daily_limit FROM users WHERE id = ${user_id}`;
+        if (userRows.length === 0) throw new Error("Utilisateur inconnu");
+        if (amount > userRows[0].daily_limit) {
+            throw new Error(`Plafond dépassé (${userRows[0].daily_limit} FCFA)`);
+        }
+
+        // 2. Appel à la Passerelle (Simulation ou Real API)
+        let gatewayResult = { success: true };
+        const orderId = `GS-${Date.now()}`;
+
+        if (to_operator === 'ORANGE') {
+            gatewayResult = await orangeAPI.initiatePayment(amount, orderId, user_id);
+        } else if (to_operator === 'MTN') {
+            gatewayResult = await mtnAPI.requestToPay(amount, phone, orderId);
+        } else if (to_operator === 'MOOV') {
+            gatewayResult = await moovAPI.initiatePayment(amount, orderId, phone);
+        }
+
+        if (!gatewayResult.success) {
+            throw new Error(`Échec de la passerelle ${to_operator}`);
+        }
+
+        // 3. Enregistrement Transaction
+        const fee = amount * 0.015;
+        const txResult = await db.query`
+            INSERT INTO transactions (user_id, amount, fee, from_network, to_network, status, idempotency_key)
+            VALUES (${user_id}, ${amount}, ${fee}, ${from_network || 'WALLET'}, ${to_operator}, 'completed', ${idempotency_key || orderId})
+        `;
+
+        // Récupération de l'ID pour le Ledger
+        // Note: SQLite rowCount is change count, we might need a separate query for last_insert_rowid if needed
+        // but for now we use the unique idempotency_key for tracking.
         
-        await sql`UPDATE users SET kyc_status = 'level_2', daily_limit = 2000000 WHERE id = ${user_id}`;
-        await sql`INSERT INTO kyc_documents (user_id, document_type, status) VALUES (${user_id}, 'CNI', 'verified')`;
-        
-        res.json({ success: true, message: "KYC Validé. Plafond augmenté à 2 000 000 FCFA.", new_limit: 2000000 });
+        // 4. Écriture Ledger immuable
+        await db.query`
+            INSERT INTO ledger (transaction_id, entry_type, amount) 
+            VALUES (${orderId}, 'DEBIT', ${amount + fee})
+        `;
+
+        // Télémétrie
+        await db.query`
+            INSERT INTO telemetry (event_type, latency, status, metadata) 
+            VALUES ('TRANSFER_SUCCESS', ${Date.now() - startTime}, 'OK', ${JSON.stringify({ operator: to_operator, amount })})
+        `;
+
+        res.status(201).json({
+            status: "SUCCESS",
+            operator: to_operator,
+            transaction_id: orderId,
+            message: `Transfert ${to_operator} de ${amount} FCFA réussi.`
+        });
+
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Erreur lors de la mise à jour des informations." });
+        try {
+            await db.query`
+                INSERT INTO telemetry (event_type, latency, status, metadata) 
+                VALUES ('TRANSFER_ERROR', ${Date.now() - startTime}, 'ERROR', ${JSON.stringify({ error: err.message })})
+            `;
+        } catch (_) { /* telemetry write failure is non-critical */ }
+        res.status(500).json({ error: err.message });
     }
 });
+
+app.get('/api/transactions', async (req, res) => {
+    try {
+        const { rows } = await db.query`SELECT * FROM transactions ORDER BY created_at DESC LIMIT 20`;
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/telemetry', async (req, res) => {
+    try {
+        const { rows: recent } = await db.query`SELECT * FROM telemetry ORDER BY created_at DESC LIMIT 15`;
+        res.json({ 
+            stats: { success: recent.filter(r => r.status === 'OK').length, failures: recent.filter(r => r.status !== 'OK').length }, 
+            recent: recent.map(r => ({ ...r, metadata: JSON.parse(r.metadata || '{}') }))
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/kyc', async (req, res) => {
+    const { user_id } = req.body;
+    try {
+        await db.query`UPDATE users SET kyc_status = 'level_2', daily_limit = 2000000 WHERE id = ${user_id}`;
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Simulation de Webhook pour tests
+app.post('/api/webhooks/simulate', async (req, res) => {
+    const { transaction_id, status } = req.body;
+    try {
+        await db.query`UPDATE transactions SET status = ${status} WHERE idempotency_key = ${transaction_id} OR id = ${transaction_id}`;
+        res.json({ success: true, message: `Status mis à jour vers ${status}` });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ─── Auto-init des tables AVANT de servir des requêtes ───
+const PORT = process.env.PORT || 3001;
+
+async function startServer() {
+    try {
+        await db.initCoreTables();
+    } catch (err) {
+        console.error('DB init error:', err.message);
+    }
+
+    if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`\n🚀 GoSend backend actif sur http://localhost:${PORT}`);
+        });
+    }
+}
+
+startServer();
 
 export default app;
