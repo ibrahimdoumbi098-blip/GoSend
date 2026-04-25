@@ -70,23 +70,31 @@ export default function LandingPage({ onStart }) {
     <div style={{ background: 'white' }}>
       {/* ═══ HERO ═══ */}
       <div className="landing-hero animate-fade-up">
-        <div className="hero-badge"><Icon name="Sparkles" size={14} /> Nouveau en Côte d'Ivoire</div>
-        <h1 className="hero-title">
-          L'argent voyage<br/><span className="gradient-text">entre réseaux</span>
-        </h1>
-        <p className="hero-subtitle">
-          Transférez instantanément entre Orange Money, MTN MoMo, Wave et Moov Money. 
-          Sans vous déplacer, sans complications.
-        </p>
-        <button onClick={onStart} className="transfer-btn animate-fade-up-2" style={{ maxWidth: '340px', margin: '0 auto', fontSize: '14px', padding: '18px 36px', borderRadius: '16px' }}>
-          <Icon name="ArrowRightLeft" size={18} /> Commencer un transfert
-        </button>
+        <div className="landing-hero-container">
+          <div className="hero-text">
+            <div className="hero-badge"><Icon name="Sparkles" size={14} /> Nouveau en Côte d'Ivoire</div>
+            <h1 className="hero-title">
+              L'argent voyage<br/><span className="gradient-text">entre réseaux</span>
+            </h1>
+            <p className="hero-subtitle">
+              Transférez instantanément entre Orange Money, MTN MoMo, Wave et Moov Money. 
+              Sans vous déplacer, sans complications.
+            </p>
+            <button onClick={onStart} className="transfer-btn animate-fade-up-2" style={{ maxWidth: '340px', margin: '0 0 24px 0', fontSize: '14px', padding: '18px 36px', borderRadius: '16px' }}>
+              <Icon name="ArrowRightLeft" size={18} /> Commencer un transfert
+            </button>
 
-        <div className="hero-stats animate-fade-up-3">
-          <div className="hero-stat"><div className="hero-stat-value">{count1.toLocaleString()}+</div><div className="hero-stat-label">Utilisateurs</div></div>
-          <div className="hero-stat"><div className="hero-stat-value">4</div><div className="hero-stat-label">Opérateurs</div></div>
-          <div className="hero-stat"><div className="hero-stat-value">1.5%</div><div className="hero-stat-label">Frais uniques</div></div>
-          <div className="hero-stat"><div className="hero-stat-value">10s</div><div className="hero-stat-label">Par transfert</div></div>
+            <div className="hero-stats animate-fade-up-3" style={{ justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+              <div className="hero-stat"><div className="hero-stat-value">{count1.toLocaleString()}+</div><div className="hero-stat-label">Utilisateurs</div></div>
+              <div className="hero-stat"><div className="hero-stat-value">4</div><div className="hero-stat-label">Opérateurs</div></div>
+              <div className="hero-stat"><div className="hero-stat-value">1.5%</div><div className="hero-stat-label">Frais uniques</div></div>
+            </div>
+          </div>
+          
+          <div className="hero-visual hide-on-mobile animate-fade-up-2">
+            <div className="glow-blob"></div>
+            <img src="/mockup.png" alt="GoSend App Interface" className="floating-mockup" />
+          </div>
         </div>
       </div>
 

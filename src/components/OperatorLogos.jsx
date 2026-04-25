@@ -15,27 +15,18 @@ export const OperatorLogo = ({ id, size = 40 }) => {
     // ─── Orange Money — Carré orange + logo officiel ───
     ORANGE: (
       <svg width={s} height={s} viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="52" height="52" rx="13" fill="#FF7900"/>
-        {/* Logo "carré arrondi" d'Orange */}
-        <rect x="13" y="13" width="26" height="26" rx="7" fill="white"/>
-        <rect x="17" y="17" width="18" height="18" rx="5" fill="#FF7900"/>
-        <rect x="20" y="20" width="12" height="12" rx="3" fill="white"/>
-        <rect x="23" y="23" width="6" height="6" rx="2" fill="#FF7900"/>
+        <rect width="52" height="52" rx="10" fill="#FF6600"/>
+        <text x="25" y="42" textAnchor="middle" fontWeight="700" fontSize="17" fill="white" fontFamily="Arial, Helvetica, sans-serif" letterSpacing="-0.5">orange</text>
+        <text x="44" y="32" textAnchor="middle" fontWeight="700" fontSize="6" fill="white" fontFamily="Arial, Helvetica, sans-serif">TM</text>
       </svg>
     ),
 
-    // ─── MTN MoMo — Fond jaune + "MTN" bleu + icône mobile ───
+    // ─── MTN MoMo — Fond jaune + Ovale bleu + MTN ───
     MTN: (
       <svg width={s} height={s} viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="52" height="52" rx="13" fill="#FFCC08"/>
-        <text x="26" y="23" textAnchor="middle" fontWeight="900" fontSize="16" fill="#003068" fontFamily="Inter,Arial,sans-serif">MTN</text>
-        {/* Petite icône téléphone mobile */}
-        <rect x="20" y="28" width="12" height="16" rx="2.5" fill="#003068"/>
-        <rect x="22" y="30" width="8" height="9" rx="1" fill="#FFCC08"/>
-        <circle cx="26" cy="41" r="1.3" fill="#FFCC08"/>
-        {/* Ondes */}
-        <path d="M34 30 Q37 33 34 36" stroke="#003068" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-        <path d="M37 28 Q41 33 37 38" stroke="#003068" strokeWidth="1.3" fill="none" strokeLinecap="round"/>
+        <rect width="52" height="52" rx="10" fill="#FFCC00"/>
+        <ellipse cx="26" cy="26" rx="22" ry="12" fill="#006699"/>
+        <text x="25" y="32" textAnchor="middle" fontWeight="900" fontSize="16" fill="white" fontFamily="Arial, Helvetica, sans-serif" fontStyle="italic" letterSpacing="-0.5">MTN</text>
       </svg>
     ),
 
