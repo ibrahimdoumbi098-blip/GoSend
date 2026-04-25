@@ -93,7 +93,66 @@ export default function LandingPage({ onStart }) {
           
           <div className="hero-visual hide-on-mobile animate-fade-up-2">
             <div className="glow-blob"></div>
-            <img src="/mockup.png" alt="GoSend App Interface" className="floating-mockup" />
+            <div className="phone-mockup">
+              <div className="phone-notch"></div>
+              <div className="phone-screen">
+                {/* Header */}
+                <div style={{ padding: '36px 20px 16px', background: 'white', borderBottom: '1px solid #f1f5f9' }}>
+                  <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--accent-primary)', fontStyle: 'italic', letterSpacing: '-0.05em' }}>GOSEND</div>
+                </div>
+                
+                {/* Body */}
+                <div style={{ padding: '20px' }}>
+                  <div style={{ background: 'white', padding: '16px', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                      <div style={{ flex: 1, padding: '10px', border: '1px solid #e2e8f0', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <OperatorLogo id="ORANGE" size={20} /> <span style={{fontSize:'11px', fontWeight:700}}>Orange</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center' }}><Icon name="ArrowRight" size={14} style={{color: '#94a3b8'}}/></div>
+                      <div style={{ flex: 1, padding: '10px', border: '1px solid #e2e8f0', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <OperatorLogo id="MTN" size={20} /> <span style={{fontSize:'11px', fontWeight:700}}>MTN</span>
+                      </div>
+                    </div>
+                    
+                    <div style={{ marginBottom: '16px' }}>
+                      <div style={{ fontSize: '10px', fontWeight: 700, color: '#64748b', marginBottom: '4px' }}>MONTANT (FCFA)</div>
+                      <div style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>15 000 F</div>
+                      <div style={{ fontSize: '11px', color: '#10b981', marginTop: '2px', fontWeight: 600 }}>Frais: 225 F</div>
+                    </div>
+                    
+                    <div style={{ background: 'var(--accent-primary)', color: 'white', padding: '12px', borderRadius: '12px', textAlign: 'center', fontSize: '13px', fontWeight: 700, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
+                      Envoyer <Icon name="Send" size={14} />
+                    </div>
+                  </div>
+                  
+                  <div style={{ background: 'white', padding: '16px', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                    <div style={{ fontSize: '10px', fontWeight: 700, color: '#64748b', marginBottom: '12px' }}>DERNIERS TRANSFERTS</div>
+                    
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        <div style={{ background: '#f8fafc', padding: '6px', borderRadius: '10px' }}><OperatorLogo id="WAVE" size={24} /></div>
+                        <div>
+                          <div style={{ fontSize: '11px', fontWeight: 700, color: '#0f172a' }}>WAVE → MOOV</div>
+                          <div style={{ fontSize: '10px', color: '#64748b' }}>Il y a 2h</div>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '12px', fontWeight: 800 }}>5 000 F</div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        <div style={{ background: '#f8fafc', padding: '6px', borderRadius: '10px' }}><OperatorLogo id="ORANGE" size={24} /></div>
+                        <div>
+                          <div style={{ fontSize: '11px', fontWeight: 700, color: '#0f172a' }}>ORANGE → MTN</div>
+                          <div style={{ fontSize: '10px', color: '#64748b' }}>Hier</div>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '12px', fontWeight: 800 }}>25 000 F</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
