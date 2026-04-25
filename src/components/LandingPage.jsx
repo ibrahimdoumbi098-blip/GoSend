@@ -291,28 +291,28 @@ export default function LandingPage({ onStart }) {
               <div className="glow-blob" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(99,102,241,0.2))' }}></div>
               <div className="phone-mockup" style={{ animation: 'float 7s ease-in-out infinite reverse' }}>
                 <div className="phone-notch"></div>
-                <div className="phone-screen" style={{ background: '#10B981', color: 'white', display: 'flex', flexDirection: 'column' }}>
+                <div className="phone-screen" style={{ background: '#f8fafc', color: '#0f172a', display: 'flex', flexDirection: 'column' }}>
                   
                   {/* Success Header */}
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                    <div style={{ width: '64px', height: '64px', background: 'rgba(255,255,255,0.2)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
-                      <Icon name="Check" size={32} style={{ color: 'white' }} />
+                    <div style={{ width: '64px', height: '64px', background: '#10B981', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px', boxShadow: '0 8px 16px rgba(16,185,129,0.2)' }}>
+                      <Icon name="Check" size={32} style={{ color: 'white', strokeWidth: 3 }} />
                     </div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, opacity: 0.9 }}>Transfert Réussi</div>
-                    <div style={{ fontSize: '36px', fontWeight: 900, marginTop: '8px' }}>15 000 F</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#64748b' }}>Transfert Réussi</div>
+                    <div style={{ fontSize: '36px', fontWeight: 900, marginTop: '4px', color: '#0f172a', letterSpacing: '-0.02em' }}>15 000 F</div>
                     
-                    <div style={{ background: 'rgba(255,255,255,0.15)', padding: '12px 24px', borderRadius: '100px', marginTop: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ background: 'white', padding: '12px 24px', borderRadius: '100px', marginTop: '24px', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
                       <OperatorLogo id="ORANGE" size={20} />
-                      <Icon name="ArrowRight" size={14} style={{ opacity: 0.7 }} />
+                      <Icon name="ArrowRight" size={14} style={{ color: '#94a3b8' }} />
                       <OperatorLogo id="MTN" size={20} />
                     </div>
                   </div>
                   
                   {/* Notification Bubble at the bottom */}
-                  <div style={{ background: 'white', borderRadius: '32px 32px 0 0', padding: '32px 24px', color: '#0f172a', boxShadow: '0 -10px 40px rgba(0,0,0,0.1)' }}>
+                  <div style={{ background: 'white', borderRadius: '32px 32px 0 0', padding: '32px 24px', color: '#0f172a', boxShadow: '0 -8px 32px rgba(0,0,0,0.04)' }}>
                     <div style={{ fontSize: '11px', fontWeight: 800, color: '#94a3b8', marginBottom: '16px', letterSpacing: '0.05em' }}>DESTINATAIRE SATISFAIT</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      <img src="/happy_customer.png" alt="Client satisfait" style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #10B981', padding: '2px' }} />
+                      <img src="/happy_customer.png" alt="Client satisfait" style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #10B981', padding: '2px' }} />
                       <div>
                         <div style={{ fontSize: '16px', fontWeight: 800 }}>Amina K.</div>
                         <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>+225 05 05 05 05</div>
