@@ -257,31 +257,75 @@ export default function LandingPage({ onStart }) {
       </div>
 
       {/* ═══ HOW IT WORKS ═══ */}
-      <div style={{ background: 'white', padding: '72px 24px' }}>
-        <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+      <div style={{ background: 'white', padding: '96px 24px' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
             <div className="section-label">Comment ça marche</div>
             <h2 className="section-title">3 étapes, 10 secondes</h2>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-            {[
-              { step: '01', title: 'Choisissez les opérateurs', desc: 'Sélectionnez d\'où vient l\'argent et où il va. Orange, MTN, Wave ou Moov.', icon: 'MousePointerClick' },
-              { step: '02', title: 'Entrez le montant', desc: 'Tapez le montant et le numéro du destinataire. Les frais sont affichés en temps réel.', icon: 'PenLine' },
-              { step: '03', title: 'Envoyez !', desc: 'Cliquez sur Envoyer. Le transfert est confirmé en quelques secondes avec un reçu digital.', icon: 'Send' },
-            ].map((s, i) => (
-              <div key={i} style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-                <div style={{
-                  width: '48px', height: '48px', borderRadius: '14px', flexShrink: 0,
-                  background: 'var(--accent-primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                  <span style={{ fontSize: '16px', fontWeight: 900, color: 'var(--accent-primary)' }}>{s.step}</span>
+          
+          <div className="how-it-works-container" style={{ display: 'flex', alignItems: 'center', gap: '64px' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '40px' }}>
+              {[
+                { step: '01', title: 'Choisissez les opérateurs', desc: 'Sélectionnez d\'où vient l\'argent et où il va. Orange, MTN, Wave ou Moov.', icon: 'MousePointerClick' },
+                { step: '02', title: 'Entrez le montant', desc: 'Tapez le montant et le numéro du destinataire. Les frais sont affichés en temps réel.', icon: 'PenLine' },
+                { step: '03', title: 'Envoyez !', desc: 'Cliquez sur Envoyer. Le transfert est confirmé en quelques secondes avec un reçu digital.', icon: 'Send' },
+              ].map((s, i) => (
+                <div key={i} style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
+                  <div style={{
+                    width: '56px', height: '56px', borderRadius: '16px', flexShrink: 0,
+                    background: 'var(--accent-primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 8px 16px rgba(99,102,241,0.1)'
+                  }}>
+                    <span style={{ fontSize: '18px', fontWeight: 900, color: 'var(--accent-primary)' }}>{s.step}</span>
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '6px' }}>{s.title}</h3>
+                    <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.desc}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '4px' }}>{s.title}</h3>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.desc}</p>
+              ))}
+            </div>
+            
+            <div className="hide-on-mobile" style={{ flex: 1, display: 'flex', justifyContent: 'center', position: 'relative' }}>
+              <div className="glow-blob" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(99,102,241,0.2))' }}></div>
+              <div className="phone-mockup" style={{ animation: 'float 7s ease-in-out infinite reverse' }}>
+                <div className="phone-notch"></div>
+                <div className="phone-screen" style={{ background: '#10B981', color: 'white', display: 'flex', flexDirection: 'column' }}>
+                  
+                  {/* Success Header */}
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                    <div style={{ width: '64px', height: '64px', background: 'rgba(255,255,255,0.2)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+                      <Icon name="Check" size={32} style={{ color: 'white' }} />
+                    </div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, opacity: 0.9 }}>Transfert Réussi</div>
+                    <div style={{ fontSize: '36px', fontWeight: 900, marginTop: '8px' }}>15 000 F</div>
+                    
+                    <div style={{ background: 'rgba(255,255,255,0.15)', padding: '12px 24px', borderRadius: '100px', marginTop: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <OperatorLogo id="ORANGE" size={20} />
+                      <Icon name="ArrowRight" size={14} style={{ opacity: 0.7 }} />
+                      <OperatorLogo id="MTN" size={20} />
+                    </div>
+                  </div>
+                  
+                  {/* Notification Bubble at the bottom */}
+                  <div style={{ background: 'white', borderRadius: '32px 32px 0 0', padding: '32px 24px', color: '#0f172a', boxShadow: '0 -10px 40px rgba(0,0,0,0.1)' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#94a3b8', marginBottom: '16px', letterSpacing: '0.05em' }}>DESTINATAIRE SATISFAIT</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <img src="/happy_customer.png" alt="Client satisfait" style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #10B981', padding: '2px' }} />
+                      <div>
+                        <div style={{ fontSize: '16px', fontWeight: 800 }}>Amina K.</div>
+                        <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>+225 05 05 05 05</div>
+                      </div>
+                    </div>
+                    <div style={{ background: '#ecfdf5', padding: '14px', borderRadius: '12px', marginTop: '20px', fontSize: '13px', color: '#059669', fontWeight: 600, display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      <Icon name="CheckCircle2" size={18} /> L'argent est arrivé à la seconde.
+                    </div>
+                  </div>
+                  
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>

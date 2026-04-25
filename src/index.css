@@ -326,9 +326,16 @@ body {
 }
 
 @media (max-width: 850px) {
-  .landing-hero-container {
+  .landing-hero-container,
+  .how-it-works-container {
     flex-direction: column;
     text-align: center;
+  }
+  .how-it-works-container > div {
+    align-items: center;
+  }
+  .how-it-works-container > div > div {
+    text-align: left;
   }
   .hero-text {
     text-align: center;
