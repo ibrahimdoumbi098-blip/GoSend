@@ -149,6 +149,33 @@ app.post('/api/transfer', async (req, res) => {
     }
 });
 
+// =============================================
+// WEBHOOKS DE PAIEMENT (ORANGE / MTN)
+// =============================================
+app.post('/api/webhooks/orange', async (req, res) => {
+    const { status, txnid } = req.body;
+    console.log(`[Webhook Orange] Réception du statut: ${status} pour tx: ${txnid}`);
+    if (status === 'SUCCESS') {
+        try {
+            await db.query`UPDATE transactions SET status = 'completed' WHERE idempotency_key = ${txnid}`;
+            await db.query`INSERT INTO telemetry (event_type, latency, status, metadata) VALUES ('WEBHOOK_ORANGE_SUCCESS', 0, 'OK', ${JSON.stringify({ txnid })})`;
+        } catch (e) { console.error(e); }
+    }
+    res.status(200).send('OK');
+});
+
+app.post('/api/webhooks/mtn', async (req, res) => {
+    const { financialTransactionId, status } = req.body;
+    console.log(`[Webhook MTN] Réception du statut: ${status} pour tx: ${financialTransactionId}`);
+    if (status === 'SUCCESSFUL') {
+        try {
+            await db.query`UPDATE transactions SET status = 'completed' WHERE idempotency_key = ${financialTransactionId}`;
+            await db.query`INSERT INTO telemetry (event_type, latency, status, metadata) VALUES ('WEBHOOK_MTN_SUCCESS', 0, 'OK', ${JSON.stringify({ financialTransactionId })})`;
+        } catch (e) { console.error(e); }
+    }
+    res.status(200).send('OK');
+});
+
 app.get('/api/transactions', async (req, res) => {
     try {
         const { rows } = await db.query`SELECT * FROM transactions ORDER BY created_at DESC LIMIT 20`;

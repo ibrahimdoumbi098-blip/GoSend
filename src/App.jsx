@@ -17,7 +17,6 @@ const Icon = ({ name, size = 18, className = "" }) => {
 const NAV_ITEMS = [
   { path: '/', icon: 'ArrowRightLeft', label: 'Transfert' },
   { path: '/profile', icon: 'Clock', label: 'Historique' },
-  { path: '/monitoring', icon: 'Activity', label: 'Live' },
   { path: '/terms', icon: 'Shield', label: 'Légal' },
 ];
 
@@ -35,7 +34,6 @@ function App() {
             <div className="nav-links">
               <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}><Icon name="ArrowRightLeft" size={14} /> Transfert</Link>
               <Link to="/profile" className={`nav-link ${isActive('/profile') ? 'active' : ''}`}><Icon name="Clock" size={14} /> Historique</Link>
-              <Link to="/monitoring" className={`nav-link ${isActive('/monitoring') ? 'active' : ''}`}><Icon name="Activity" size={14} /> Live</Link>
             </div>
           </div>
         </nav>
@@ -48,7 +46,8 @@ function App() {
             <Route path="/kyc" element={<KycUpload />} />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/terms" element={<Terms />} />
-            <Route path="/monitoring" element={<StressDashboard />} />
+            {/* Admin only route */}
+            <Route path="/admin/monitoring" element={<StressDashboard />} />
             <Route path="*" element={<Home />} />
           </Routes>
           <footer className="app-footer">

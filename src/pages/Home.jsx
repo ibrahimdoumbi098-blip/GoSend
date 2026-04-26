@@ -53,17 +53,27 @@ export default function Home() {
     try {
       const API_URL = import.meta.env.VITE_API_URL || '';
       const uuid = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Math.random().toString(36).substring(2);
-      await new Promise(r => setTimeout(r, 1200));
+      
+      // Etape 1: Ping Operateur
+      await new Promise(r => setTimeout(r, 1800));
       setProcessingStep(2);
+      
+      // Etape 2: Verification Conformité
       const response = await fetch(`${API_URL}/api/transfer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: 'GOS-943029', amount: parseInt(amount), phone: phoneNumber, from_network: senderOperator, idempotency_key: uuid })
       });
       const data = await response.json();
+      
+      await new Promise(r => setTimeout(r, 1500));
+      
       if (!response.ok) throw new Error(data.error || 'Erreur');
+      
+      // Etape 3: Validation
       setProcessingStep(3);
-      await new Promise(r => setTimeout(r, 800));
+      await new Promise(r => setTimeout(r, 1500));
+      
       setFinalTransaction({ ...data, amount: parseInt(amount), phone: phoneNumber, operator: data.operator });
       setSuccess(`Transfert de ${parseInt(amount).toLocaleString()} FCFA réussi`);
     } catch (err) { setError(err.message); }
@@ -229,9 +239,9 @@ export default function Home() {
               </div>
             </div>
             <h2 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '20px' }}>
-              {processingStep === 1 ? "Authentification..." : processingStep === 2 ? "Contact Opérateur..." : "Finalisation..."}
+              {processingStep === 1 ? `Connexion à ${OPERATORS.find(o=>o.id===senderOperator)?.short || 'l\'opérateur'}...` : processingStep === 2 ? "Vérification du numéro..." : "Transfert en cours..."}
             </h2>
-            {[{ step: 1, label: 'Vérification Sécurité' }, { step: 2, label: 'Passerelle Opérateur' }, { step: 3, label: 'Écriture Ledger' }].map(s => (
+            {[{ step: 1, label: `Ping ${OPERATORS.find(o=>o.id===senderOperator)?.short || 'Opérateur 1'}` }, { step: 2, label: 'Vérification conformité' }, { step: 3, label: `Validation ${OPERATORS.find(o=>o.id===receiverOperator)?.short || 'Opérateur 2'}` }].map(s => (
               <div key={s.step} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px', fontSize: '11px', fontWeight: 700, color: processingStep >= s.step ? 'var(--accent-primary)' : 'var(--text-muted)' }}>
                 <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: processingStep >= s.step ? 'var(--accent-primary)' : 'var(--border-light)', transition: 'all 0.3s' }} />
                 {s.label}
