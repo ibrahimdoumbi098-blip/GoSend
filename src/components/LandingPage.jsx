@@ -70,88 +70,79 @@ export default function LandingPage({ onStart }) {
     <div style={{ background: 'white' }}>
       {/* ═══ HERO ═══ */}
       <div className="landing-hero animate-fade-up">
-        <div className="landing-hero-container">
-          <div className="hero-text">
-            <div className="hero-badge"><Icon name="Sparkles" size={14} /> Nouveau en Côte d'Ivoire</div>
-            <h1 className="hero-title">
-              L'argent voyage<br/><span className="gradient-text">entre réseaux</span>
+        <div className="landing-hero-container" style={{ alignItems: 'flex-start', paddingTop: '40px' }}>
+          <div className="hero-text" style={{ paddingTop: '20px' }}>
+            <div className="hero-badge" style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)' }}><Icon name="Sparkles" size={14} /> N°1 de l'interopérabilité en CI</div>
+            <h1 className="hero-title" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', lineHeight: 1.05 }}>
+              Transférez vers <br/>
+              <span className="gradient-text">tous les réseaux</span><br/>
+              sans limite.
             </h1>
-            <p className="hero-subtitle">
-              Transférez instantanément entre Orange Money, MTN MoMo, Wave et Moov Money. 
-              Sans vous déplacer, sans complications.
+            <p className="hero-subtitle" style={{ fontSize: '1.2rem', maxWidth: '480px' }}>
+              Orange, MTN, Wave, Moov. Envoyez de l'argent instantanément, à moindres frais, depuis votre canapé.
             </p>
-            <button onClick={onStart} className="transfer-btn animate-fade-up-2" style={{ maxWidth: '340px', margin: '0 0 24px 0', fontSize: '14px', padding: '18px 36px', borderRadius: '16px' }}>
-              <Icon name="ArrowRightLeft" size={18} /> Commencer un transfert
-            </button>
-
-            <div className="hero-stats animate-fade-up-3" style={{ justifyContent: 'flex-start', flexWrap: 'wrap' }}>
-              <div className="hero-stat"><div className="hero-stat-value">{count1.toLocaleString()}+</div><div className="hero-stat-label">Utilisateurs</div></div>
-              <div className="hero-stat"><div className="hero-stat-value">4</div><div className="hero-stat-label">Opérateurs</div></div>
-              <div className="hero-stat"><div className="hero-stat-value">1.5%</div><div className="hero-stat-label">Frais uniques</div></div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '32px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '-10px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid white', background: '#FCD34D', zIndex: 3 }}></div>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid white', background: '#60A5FA', zIndex: 2, marginLeft: '-15px' }}></div>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid white', background: '#F87171', zIndex: 1, marginLeft: '-15px' }}></div>
+              </div>
+              <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                Rejoignez <span style={{ color: 'var(--text-primary)', fontWeight: 900 }}>{count1.toLocaleString()}+</span> utilisateurs
+              </div>
             </div>
           </div>
           
-          <div className="hero-visual hide-on-mobile animate-fade-up-2">
-            <div className="glow-blob"></div>
-            <div className="phone-mockup">
-              <div className="phone-notch"></div>
-              <div className="phone-screen">
-                {/* Header */}
-                <div style={{ padding: '36px 20px 16px', background: 'white', borderBottom: '1px solid #f1f5f9' }}>
-                  <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--accent-primary)', fontStyle: 'italic', letterSpacing: '-0.05em' }}>GOSEND</div>
-                </div>
-                
-                {/* Body */}
-                <div style={{ padding: '20px' }}>
-                  <div style={{ background: 'white', padding: '16px', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', marginBottom: '16px' }}>
-                    <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                      <div style={{ flex: 1, padding: '10px', border: '1px solid #e2e8f0', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <OperatorLogo id="ORANGE" size={20} /> <span style={{fontSize:'11px', fontWeight:700}}>Orange</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center' }}><Icon name="ArrowRight" size={14} style={{color: '#94a3b8'}}/></div>
-                      <div style={{ flex: 1, padding: '10px', border: '1px solid #e2e8f0', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <OperatorLogo id="MTN" size={20} /> <span style={{fontSize:'11px', fontWeight:700}}>MTN</span>
-                      </div>
-                    </div>
-                    
-                    <div style={{ marginBottom: '16px' }}>
-                      <div style={{ fontSize: '10px', fontWeight: 700, color: '#64748b', marginBottom: '4px' }}>MONTANT (FCFA)</div>
-                      <div style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>15 000 F</div>
-                      <div style={{ fontSize: '11px', color: '#10b981', marginTop: '2px', fontWeight: 600 }}>Frais: 225 F</div>
-                    </div>
-                    
-                    <div style={{ background: 'var(--accent-primary)', color: 'white', padding: '12px', borderRadius: '12px', textAlign: 'center', fontSize: '13px', fontWeight: 700, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
-                      Envoyer <Icon name="Send" size={14} />
-                    </div>
-                  </div>
-                  
-                  <div style={{ background: 'white', padding: '16px', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                    <div style={{ fontSize: '10px', fontWeight: 700, color: '#64748b', marginBottom: '12px' }}>DERNIERS TRANSFERTS</div>
-                    
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                        <div style={{ background: '#f8fafc', padding: '6px', borderRadius: '10px' }}><OperatorLogo id="WAVE" size={24} /></div>
-                        <div>
-                          <div style={{ fontSize: '11px', fontWeight: 700, color: '#0f172a' }}>WAVE → MOOV</div>
-                          <div style={{ fontSize: '10px', color: '#64748b' }}>Il y a 2h</div>
-                        </div>
-                      </div>
-                      <div style={{ fontSize: '12px', fontWeight: 800 }}>5 000 F</div>
-                    </div>
+          <div className="hero-visual animate-fade-up-2" style={{ width: '100%', maxWidth: '440px', margin: '0 auto' }}>
+            <div className="glow-blob" style={{ right: '-50px', top: '50px' }}></div>
+            
+            {/* Quick Calculator Card (SendChap Style) */}
+            <div style={{ 
+              background: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(20px)', 
+              borderRadius: '24px', padding: '32px', boxShadow: '0 24px 48px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02)',
+              position: 'relative', zIndex: 10, width: '100%'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)' }}>Simulateur rapide</h3>
+                <div style={{ background: '#ECFDF5', color: '#10B981', padding: '4px 10px', borderRadius: '100px', fontSize: '11px', fontWeight: 800 }}>1.5% FRAIS</div>
+              </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                        <div style={{ background: '#f8fafc', padding: '6px', borderRadius: '10px' }}><OperatorLogo id="ORANGE" size={24} /></div>
-                        <div>
-                          <div style={{ fontSize: '11px', fontWeight: 700, color: '#0f172a' }}>ORANGE → MTN</div>
-                          <div style={{ fontSize: '10px', color: '#64748b' }}>Hier</div>
-                        </div>
-                      </div>
-                      <div style={{ fontSize: '12px', fontWeight: 800 }}>25 000 F</div>
-                    </div>
-                  </div>
+              <div style={{ background: '#F8FAFC', borderRadius: '16px', padding: '16px', border: '1px solid #E2E8F0', marginBottom: '16px' }}>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: '#64748B', marginBottom: '8px' }}>TU ENVOIES (Orange Money)</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '24px', fontWeight: 900, color: '#0F172A' }}>50 000</span>
+                  <span style={{ fontSize: '16px', fontWeight: 700, color: '#94A3B8' }}>FCFA</span>
                 </div>
               </div>
+
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '-24px 0 8px', position: 'relative', zIndex: 2 }}>
+                <div style={{ background: 'white', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                  <Icon name="ArrowDown" size={16} style={{ color: '#6366F1' }} />
+                </div>
+              </div>
+
+              <div style={{ background: '#F8FAFC', borderRadius: '16px', padding: '16px', border: '1px solid #E2E8F0', marginBottom: '24px' }}>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: '#64748B', marginBottom: '8px' }}>LE DESTINATAIRE REÇOIT (MTN MoMo)</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '24px', fontWeight: 900, color: '#10B981' }}>50 000</span>
+                  <span style={{ fontSize: '16px', fontWeight: 700, color: '#94A3B8' }}>FCFA</span>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', fontSize: '13px', fontWeight: 600 }}>
+                <span style={{ color: '#64748B' }}>Frais GoSend</span>
+                <span style={{ color: '#0F172A', fontWeight: 800 }}>750 FCFA</span>
+              </div>
+
+              <button onClick={onStart} style={{ 
+                width: '100%', padding: '20px', borderRadius: '16px', border: 'none', 
+                background: 'linear-gradient(135deg, #6366F1, #7C3AED)', color: 'white', 
+                fontSize: '16px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s',
+                boxShadow: '0 8px 24px rgba(99,102,241,0.3)', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px'
+              }}>
+                Continuer le transfert <Icon name="ArrowRight" size={18} />
+              </button>
             </div>
           </div>
         </div>
@@ -172,7 +163,68 @@ export default function LandingPage({ onStart }) {
         </div>
       </div>
 
-      {/* ═══ CAROUSEL ═══ */}
+      {/* ═══ INNOVATION : GOSEND LINK ═══ */}
+      <div style={{ background: '#0F172A', padding: '96px 24px', overflow: 'hidden', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(99,102,241,0.5), transparent)' }}></div>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80vw', height: '80vw', maxWidth: '800px', background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)', pointerEvents: 'none' }}></div>
+        
+        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '64px' }}>
+          
+          <div style={{ flex: '1 1 400px', zIndex: 10 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: '100px', color: '#818CF8', fontSize: '11px', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '24px' }}>
+              <Icon name="Link" size={14} /> EXCLUSIVITÉ GOSEND
+            </div>
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 900, color: 'white', lineHeight: 1.1, marginBottom: '24px', letterSpacing: '-0.03em' }}>
+              Ne demandez plus <br/>
+              <span style={{ color: '#818CF8' }}>"Tu es sur quel réseau ?"</span>
+            </h2>
+            <p style={{ fontSize: '1.1rem', color: '#94A3B8', lineHeight: 1.7, marginBottom: '32px' }}>
+              Créez votre <strong style={{ color: 'white' }}>GoSend Link</strong>. Partagez-le sur WhatsApp ou Instagram. Vos clients cliquent, choisissent leur opérateur, et vous paient directement.
+            </p>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'white', fontWeight: 600, fontSize: '14px' }}>
+                <Icon name="CheckCircle2" size={18} style={{ color: '#10B981' }} /> Lien universel
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'white', fontWeight: 600, fontSize: '14px' }}>
+                <Icon name="CheckCircle2" size={18} style={{ color: '#10B981' }} /> Zéro inscription pour le payeur
+              </div>
+            </div>
+          </div>
+
+          <div style={{ flex: '1 1 400px', position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'center' }}>
+            {/* Mockup of a social media bio with the link */}
+            <div style={{ width: '100%', maxWidth: '340px', background: '#1E293B', borderRadius: '24px', padding: '24px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 32px 64px rgba(0,0,0,0.5)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
+                <img src="/happy_customer.png" alt="Profile" style={{ width: '64px', height: '64px', borderRadius: '50%', border: '2px solid #818CF8', padding: '2px', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
+                <div>
+                  <h4 style={{ color: 'white', fontSize: '18px', margin: 0, fontWeight: 800 }}>Boutique Amina</h4>
+                  <p style={{ color: '#94A3B8', fontSize: '13px', margin: '4px 0 0' }}>Vêtements & Accessoires</p>
+                </div>
+              </div>
+              
+              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '16px', marginBottom: '24px' }}>
+                <p style={{ color: '#CBD5E1', fontSize: '14px', margin: 0, lineHeight: 1.5 }}>Nouvelle collection disponible ! 🛍️<br/>Paiements acceptés via tous les réseaux ici 👇</p>
+                <div style={{ marginTop: '16px', background: '#312E81', padding: '12px 16px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid #4338CA' }}>
+                  <Icon name="Link2" size={18} style={{ color: '#818CF8' }} />
+                  <span style={{ color: 'white', fontWeight: 700, fontSize: '14px' }}>gosend.ci/pay/amina</span>
+                </div>
+              </div>
+
+              {/* Simulated Notification */}
+              <div className="animate-fade-up-3" style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '16px', borderRadius: '16px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div style={{ width: '40px', height: '40px', background: '#10B981', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon name="Bell" size={20} style={{ color: 'white' }} />
+                </div>
+                <div>
+                  <div style={{ color: '#10B981', fontSize: '12px', fontWeight: 800 }}>NOUVEAU PAIEMENT (WAVE)</div>
+                  <div style={{ color: 'white', fontSize: '15px', fontWeight: 700 }}>+ 25 000 FCFA reçus</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
       <div style={{ padding: '56px 0 32px', background: 'var(--bg-secondary)' }}>
         <div style={{ maxWidth: '600px', margin: '0 auto' }}>
           <div className="carousel-container" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
