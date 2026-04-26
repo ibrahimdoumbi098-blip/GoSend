@@ -25,7 +25,6 @@ function App() {
   const isActive = (path) => path === '/' ? (location.pathname === '/' || location.pathname === '/transfer') : location.pathname === path;
 
   return (
-    <SecurityLock>
       <div style={{ minHeight: '100vh', background: 'var(--bg-secondary)' }}>
         {/* Navbar */}
         <nav className="navbar">
@@ -83,7 +82,6 @@ function App() {
           }}><Icon name="MessageCircle" size={24} /></button>
         </a>
       </div>
-    </SecurityLock>
   );
 }
 

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import * as Lucide from 'lucide-react';
 import TransactionReceipt from '../components/TransactionReceipt.jsx';
 import LandingPage from '../components/LandingPage.jsx';
+import SecurityLock from '../components/SecurityLock.jsx';
 import { OperatorLogo, OPERATORS } from '../components/OperatorLogos.jsx';
 
 const Icon = ({ name, size = 20, className = "", style = {} }) => {
@@ -98,8 +99,9 @@ export default function Home() {
 
   // ─── Transfer Interface ───
   return (
-    <div style={{ maxWidth: '480px', margin: '0 auto', padding: '8px 16px 40px' }}>
-      {/* Header */}
+    <SecurityLock>
+      <div style={{ maxWidth: '480px', margin: '0 auto', padding: '8px 16px 40px' }}>
+        {/* Header */}
       <div className="animate-fade-up" style={{ textAlign: 'center', marginBottom: '20px' }}>
         <div className="animate-float" style={{
           width: '52px', height: '52px', borderRadius: '18px',
@@ -254,6 +256,7 @@ export default function Home() {
       {finalTransaction && (
         <TransactionReceipt transaction={finalTransaction} onClose={() => { setFinalTransaction(null); setAmount(''); setPhoneNumber(''); }} />
       )}
-    </div>
+      </div>
+    </SecurityLock>
   );
 }

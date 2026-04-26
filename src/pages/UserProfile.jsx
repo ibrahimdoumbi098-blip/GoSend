@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as Lucide from 'lucide-react';
+import SecurityLock from '../components/SecurityLock.jsx';
 
 const Icon = ({ name, size = 18, className = "", style = {} }) => {
   const LucideIcon = Lucide[name];
@@ -39,8 +40,9 @@ export default function UserProfile() {
   const limitPct = Math.min(100, (totalSpent / (userData?.daily_limit || 100000)) * 100);
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px 16px 40px' }}>
-      {/* Profile Card */}
+    <SecurityLock>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px 16px 40px' }}>
+        {/* Profile Card */}
       <div className="transfer-card animate-fade-up" style={{ padding: '32px', marginBottom: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
           <div style={{
@@ -147,6 +149,7 @@ export default function UserProfile() {
           ))
         )}
       </div>
-    </div>
+      </div>
+    </SecurityLock>
   );
 }
